@@ -185,7 +185,7 @@ services:
       - "host.docker.internal:host-gateway"
 ```
 
-**4. Créez et remonter une base de données**
+**4. Créer et remonter une base de données**
 
 Nous allons d'abord lancer uniquement le service pour la base de données appelé ici `db`.  
 Lors du lancement du service `db` nous demandons l'utilisation de l'image `postgres:12`.  
