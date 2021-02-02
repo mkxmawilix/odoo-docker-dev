@@ -1,0 +1,35 @@
+version: '2'
+services:
+  web:
+    image: my-odoo-11.0:0.1
+    depends_on:
+      - db
+    ports:
+      - 8069:8069
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=odoo
+      - DB_PASSWORD=odoo
+    volumes:
+      - myproject-odoo-data:/opt/odoo/data
+      - ./config:/etc/odoo
+      - ./custom_addons:/opt/odoo/custom_addons
+    stdin_open: true
+    tty: true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  db:
+    image: postgres:12
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - myproject-db-data:/var/lib/postgresql/data/pgdata
+      - myproject-backups-data:/backups
+volumes:
+  myproject-odoo-data:
+  myproject-db-data:
+  myproject-backups-data:
