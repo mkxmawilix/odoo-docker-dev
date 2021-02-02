@@ -16,7 +16,7 @@ Bien sur Odoo propose déjà [des images prêtes à l'emploi](https://hub.docker
 
 Les Dockfiles présents dans ce repos sont basés sur le travail de [@junariltd](https://github.com/junariltd/junari-odoo-docker)
 
-Merci à [@junariltd](https://github.com/junariltd/), pour leurs articles et leur exemple de [Docker image](https://github.com/junariltd/junari-odoo-docker) qui m'ont de tester moi-même.
+Merci à [@junariltd](https://github.com/junariltd/), pour leurs articles et leur exemple de [Dockerfile](https://github.com/junariltd/junari-odoo-docker) qui m'ont permis de tester et de me lancer.
 D'ailleurs je vous conseille de lire les articles suivants qui m'ont permis d'avancer :
 
 - [Running Odoo in Docker](https://medium.com/@dupski/odoo-development-running-odoo-in-docker-85a4cd41b4f0)
