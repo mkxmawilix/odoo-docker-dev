@@ -266,8 +266,45 @@ Effectuez l'action sur Odoo qui correspond à votre code à débug (par exemple 
 (voir [Pdb](https://docs.python.org/3/library/pdb.html))
 
 
+Utiliser des sources Odoo locales au lieu de celles clonées dans le conteneur :
+------
+
+Pour utiliser les sources locales il faut monter un volume contenant les sources Odoo vers le répertoire des sources du conteneur.  
+Mes sources Odoo se situent dans `./my-projet/odoo` et il faut donc monter ce dossier dans le dossier `/opt/odoo/odoo` du conteneur du service `web`.  
+
+```yaml
+web:
+  image: my-odoo-11.0:0.1
+  [...]
+  volumes:
+    - siclone-odoo-data:/opt/odoo/data
+    - ./config:/etc/odoo
+    - ./custom_addons:/opt/odoo/custom_addons
+    - ./odoo:/opt/odoo/odoo
+  [...]
+```
+
+Soit vous modifiez le fichier `docker-compose.yml` de base de votre projet soit vous en créez un nouveau `docker-compose.override.yml`.  
+Lors du lancement de la commande `docker-compose up` cela prendra les deux fichiers automatiquement (voir (Docker compose extend)[https://docs.docker.com/compose/extends/]).
+
+Sinon si vous le souhaitez, vous pouvez créer un fichier spécifique par exemple `docker-compose-odoo-local.yml` contenant juste l'ajout du volume.  
+
+```yaml
+version: '2'
+services:
+  web:
+    volumes:
+      - ./odoo:/opt/odoo/odoo
+```
+
+
+Il faudra donc le préciser lors du lancement de la commande `docker-compose up`.  
+```shell
+$ docker-compose -f docker-compose.yml -f docker-compose-odoo-local.yml up -d
+```
+
+
 Todo :
 ------
 
 * Mettre en place une image docker pour un remote debugger avec Pycharm ou autre
-* Mettre en place un docker-compose avec les sources du serveur Odoo en local (cas d'un projet avec les sources embarquées)
