@@ -285,7 +285,7 @@ web:
 ```
 
 Soit vous modifiez le fichier `docker-compose.yml` de base de votre projet soit vous en créez un nouveau `docker-compose.override.yml`.  
-Lors du lancement de la commande `docker-compose up` cela prendra les deux fichiers automatiquement (voir (Docker compose extend)[https://docs.docker.com/compose/extends/]).
+Lors du lancement de la commande `docker-compose up` cela prendra les deux fichiers automatiquement (voir [Docker compose extend](https://docs.docker.com/compose/extends/])).
 
 Sinon si vous le souhaitez, vous pouvez créer un fichier spécifique par exemple `docker-compose-odoo-local.yml` contenant juste l'ajout du volume.  
 
