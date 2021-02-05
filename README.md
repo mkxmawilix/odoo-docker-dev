@@ -1,4 +1,4 @@
-# Développement Odoo avec le build d'une image sous linux
+# Développement Odoo avec le build d'une image
 
 
 Contexte :
@@ -34,7 +34,14 @@ Mais elles ont pour but de poser une première base de compréhension et de réf
 
 Ici nous allons voir comment utiliser les Dockerfiles pour monter les images Odoo afin de les utiliser pour du développement Odoo.
 
-Ces images sont basées sur un Ubuntu 18.04.
+Les images suivantes sont basées sur un Ubuntu 18.04 :
+- odoo-8.0
+- odoo-11.0
+- odoo-12.0
+- odoo-13.0
+
+Les images suivantes sont basées sur un Ubuntu 20.04 :
+- odoo-14.0
 
 Odoo n'est pas installé en tant que package système, il est utilisé en mode "code source".
 Odoo sera placé dans `/opt/odoo`.  
@@ -175,7 +182,8 @@ services:
     [...]
 ```
 
-Pour l'option `extra_hosts` c'est pour permettre d'utiliser le "localhost" de votre host à travers le conteneur, par exemple pour des services comme mailcatcher qui tourne sur votre host et que vous souhaitez utiliser avec votre Odoo
+Pour l'option `extra_hosts` c'est pour permettre d'utiliser le "localhost" de votre host à travers le conteneur, par exemple pour des services comme mailcatcher qui tourne sur votre host et que vous souhaitez utiliser avec votre Odoo.  
+Ce n'est pas nécessaire pour Windows.  
 ```yaml
 version: '2'
 services:
