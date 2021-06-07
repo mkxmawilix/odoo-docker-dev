@@ -25,6 +25,8 @@ RUN set -x; \
     libxslt1-dev \
     zlib1g-dev \
     python-ldap \
+    ghostscript \
+    graphviz \
     && apt-get install -y --no-install-recommends \
     nodejs-dev \
     nodejs \
