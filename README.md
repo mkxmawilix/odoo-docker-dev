@@ -273,13 +273,16 @@ Effectuez l'action sur Odoo qui correspond à votre code à débug (par exemple 
 
 (voir [Pdb](https://docs.python.org/3/library/pdb.html))
 
+
 Debugger le code avec debugpy :
 ------
 **1. Démarrer le service Odoo en mode débug**
 
 Il faut surcharger la commande envoyée à l'`entrypoint`.
+
 Le fichier `entrypoint.sh` prévoit une option `debug` afin de laisser `debugpy` lancer le serveur Odoo pour nous.
-Le lancement de Odoo par `debugpy` et les options associées sont donc définies dans le fichier `entrypoint.sh`.
+
+Soit vous modifiez le fichier `docker-compose.yml` de base de votre projet soit vous en créez un nouveau `docker-compose.override.yml` comportant juste les modifications des balises nécessaires.
 
 ```yaml
 version: '2'
@@ -289,12 +292,19 @@ services:
     entrypoint: /opt/odoo/entrypoint.sh
     command: debug
     [...]
+    ports:
+      - 8888:3001
+      - 8879:8069
+      - 8069:8069
 ```
 
 La balise `command` ici permet de faire passer la commande `debug` en paramètre de l'`entrypoint`.
 En fonction de la valeur `odoo` ou `debug` cela déclenchera le lancement de `debugpy`.
 
-Une fois le `docker-compose up` effectué c'est en réalité `debugpy` qui lancera Odoo pour nous et écoutera le port `3001` comme définit dans le `entrypoint.sh`.
+La balise `port` ici comporte des nouveaux mapping de ports pour que VSCode (`8888:3001` et `8879:8069`) puisse communiquer avec le `debugpy` du conteneur.
+On sait que debugpy communiquera sur le port `3001` comme défini dans le `entrypoint.sh`.
+
+Une fois le `docker-compose up` effectué c'est en réalité `debugpy` qui lancera Odoo pour nous.
 
 **2. Attacher VScode à Debugpy et debuger**
 
