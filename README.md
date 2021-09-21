@@ -278,7 +278,7 @@ Debugger le code avec debugpy :
 **1. Démarrer le service Odoo en mode débug**
 
 Il faut surcharger la commande envoyée à l'`entrypoint`.
-Le fichier `entrypoint.sh` prévoit une option `debug` afin de laisser `debuggpy` lancer le serveur Odoo pour nous.
+Le fichier `entrypoint.sh` prévoit une option `debug` afin de laisser `debugpy` lancer le serveur Odoo pour nous.
 Le lancement de Odoo par `debugpy` et les options associées sont donc définies dans le fichier `entrypoint.sh`.
 
 ```yaml
