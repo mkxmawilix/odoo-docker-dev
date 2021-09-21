@@ -273,6 +273,70 @@ Effectuez l'action sur Odoo qui correspond à votre code à débug (par exemple 
 
 (voir [Pdb](https://docs.python.org/3/library/pdb.html))
 
+Debugger le code avec debugpy :
+------
+**1. Démarrer le service Odoo en mode débug**
+
+Il faut surcharger la commande envoyée à l'`entrypoint`.
+Le fichier `entrypoint.sh` prévoit une option `debug` afin de laisser `debuggpy` lancer le serveur Odoo pour nous.
+Le lancement de Odoo par `debugpy` et les options associées sont donc définies dans le fichier `entrypoint.sh`.
+
+```yaml
+version: '2'
+services:
+  web:
+    image: my-odoo-11.0:0.1
+    entrypoint: /opt/odoo/entrypoint.sh
+    command: debug
+    [...]
+```
+
+La balise `command` ici permet de faire passer la commande `debug` en paramètre de l'`entrypoint`.
+En fonction de la valeur `odoo` ou `debug` cela déclenchera le lancement de `debugpy`.
+
+Une fois le `docker-compose up` effectué c'est en réalité `debugpy` qui lancera Odoo pour nous et écoutera le port `3001` comme définit dans le `entrypoint.sh`.
+
+**2. Attacher VScode à Debugpy et debuger**
+
+Il faut maitenant pouvoir attacher VSCode au `debugpy` actuellement en train de tourner dans notre conteneur Odoo.
+
+Pour se faire il faut créer une configuration VSCode pour le debugger (un fichier JSON).
+En allant dans les options de debug VSCode (Ctrl + Shift + D) Vscode propose de créer un fichier `launch.json`.
+
+Exemple de fichier : 
+```json
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+      {
+          "name": "Odoo: Attach",
+          "type": "python",
+          "request": "attach",
+          "port": 8879,
+          "debugServer": 8888,
+          "host": "localhost",
+          "pathMappings": [
+              {
+                  "localRoot": "${workspaceFolder}/odoo-14.0/",
+                  "remoteRoot": "/opt/odoo/odoo",
+              }
+          ],
+          "logToFile": true,
+      }
+  ],
+}
+```
+Le port `8879` ici est un port qui redirige vers le `8069` dans mon conteneur. Cela est définit dans le `docker-compose.yml`.
+
+Les valeurs dans `localRoot` et `remoteRoot` définies dans `pathMappings` sont les chemins vers le Odoo dans le conteneur.
+
+Il vous suffira maintenant de placer un point d'arrêt dans le code en fonction des besoins et de lancer la configuration avant de réaliser l'action qui délanchera le point d'arrêt.
+
+Si par exemple votre point d'arrêt est dans un `onchange` sur `partner_id` il faudra démarrer la configuration debug de VScode avant de réaliser la saisie du client dans `partner_id`.
+
 
 Utiliser des sources Odoo locales au lieu de celles clonées dans le conteneur :
 ------

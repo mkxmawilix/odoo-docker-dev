@@ -61,6 +61,9 @@ USER root
 RUN pip3 install psycopg2-binary
 RUN pip3 install --no-cache-dir -r odoo/requirements.txt
 
+# Install debugpy
+RUN pip3 install -U debugpy
+
 # Define runtime configuration
 COPY src/entrypoint.sh /opt/odoo
 COPY src/odoo.conf /etc/odoo
@@ -74,6 +77,6 @@ RUN mkdir /opt/odoo/data /opt/odoo/custom_addons \
 ENV ODOO_RC /etc/odoo/odoo.conf
 ENV PATH="/opt/odoo/scripts:${PATH}"
 
-EXPOSE 8069
+EXPOSE 8069 8071 8072 3000
 ENTRYPOINT ["/opt/odoo/entrypoint.sh"]
 CMD ["odoo"]
