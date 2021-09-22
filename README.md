@@ -332,6 +332,10 @@ Exemple de fichier :
               {
                   "localRoot": "${workspaceFolder}/odoo-14.0/",
                   "remoteRoot": "/opt/odoo/odoo",
+              },
+              {
+                  "localRoot": "${workspaceFolder}/custom_addons/",
+                  "remoteRoot": "/opt/odoo/custom_addons",
               }
           ],
           "logToFile": true,
@@ -341,7 +345,7 @@ Exemple de fichier :
 ```
 Le port `8879` ici est un port qui redirige vers le `8069` dans mon conteneur. Cela est définit dans le `docker-compose.yml`.
 
-Les valeurs dans `localRoot` et `remoteRoot` définies dans `pathMappings` sont les chemins vers le Odoo dans le conteneur.
+Les valeurs dans `localRoot` et `remoteRoot` définies dans `pathMappings` sont les chemins vers le Odoo et surtout vers les addons dans le conteneur que vous souhaitez pouvoir debugger. Si jamais vous placez un point d'arrêt VSCode sur un fichier qui ne fait pas partie des chemins définis ici VScode grisera le point d'arrêt en vous disant qu'il n'est pas pris en compte.
 
 Il vous suffira maintenant de placer un point d'arrêt dans le code en fonction des besoins et de lancer la configuration avant de réaliser l'action qui délanchera le point d'arrêt.
 
