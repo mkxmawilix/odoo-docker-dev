@@ -42,6 +42,7 @@ Les images suivantes sont basées sur un Ubuntu 18.04 :
 
 Les images suivantes sont basées sur un Ubuntu 20.04 :
 - odoo-14.0
+- odoo-15.0
 
 Odoo n'est pas installé en tant que package système, il est utilisé en mode "code source".
 Odoo sera placé dans `/opt/odoo`.  
