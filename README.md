@@ -36,6 +36,7 @@ Ici nous allons voir comment utiliser les Dockerfiles pour monter les images Odo
 
 Les images suivantes sont basées sur un Ubuntu 18.04 :
 - odoo-8.0
+- odoo-10.0
 - odoo-11.0
 - odoo-12.0
 - odoo-13.0
@@ -65,8 +66,11 @@ $ cd my-projet
 
 **2. Build de l'image avec le Dockerfile**
 
-Récupérez le **Dockerfile** en fonction de la version d'Odoo que vous souhaitez utiliser.  
-(vous pouvez le déplacer dans le répertoire projet mais ce n'est pas obligatoire)
+Récupérez le **Dockerfile** en fonction de la version d'Odoo que vous souhaitez utiliser.
+
+Vous pouvez le déplacer dans le répertoire projet dans un répertoire `./docker` par exemple mais ce n'est pas obligatoire.
+
+**Création de l'image manuellement :**
 
 Montez l'image vous vers le répertoire contenant le Dockerfile
 ```shell
@@ -88,6 +92,21 @@ Il est possible de la nommer par la suite après création avec son id à récup
 $ docker tag IMAGE_ID IMAGE_NAME:IMAGE_TAG
 ```
 
+**Création de l'image pendant le "docker-compose"**
+
+Pour plus de rapidité et de "contextualisation projet", il est également possible de build directement via le fichier `docker-compose.yml` et la commande `docker-compose build`.
+Pour se faire il faut donner un context de Dockerfile au service pour que docker-compose soit en mesure de trouver le Dockerfile nécessaire au build.
+
+```yaml
+  web:
+    container_name: odoo
+    image: my-odoo-11.0:0.1
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+```
+
+
 **3. Création de votre `docker-compose.yml`**
 
 Ce fichier permet de décrire (à travers un fichier YML) et de gérer plusieurs conteneurs docker comme un ensemble de service inter-connectés.  
@@ -102,6 +121,9 @@ version: '2'
 services:
   web:
     image: my-odoo-11.0:0.1
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
     depends_on:
       - db
     ports:
@@ -117,8 +139,6 @@ services:
       - ./custom_addons:/opt/odoo/custom_addons
     stdin_open: true
     tty: true
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
   db:
     image: postgres:12
     environment:
@@ -181,17 +201,6 @@ services:
     depends_on:
       - db
     [...]
-```
-
-Pour l'option `extra_hosts` c'est pour permettre d'utiliser le "localhost" de votre host à travers le conteneur, par exemple pour des services comme mailcatcher qui tourne sur votre host et que vous souhaitez utiliser avec votre Odoo.  
-Ce n'est pas nécessaire pour Windows.  
-```yaml
-version: '2'
-services:
-  web:
-    [...]
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 ```
 
 **4. Créer et remonter une base de données**
@@ -275,7 +284,7 @@ Effectuez l'action sur Odoo qui correspond à votre code à débug (par exemple 
 (voir [Pdb](https://docs.python.org/3/library/pdb.html))
 
 
-Debugger le code avec debugpy :
+Debugger le code avec debugpy et VS Code:
 ------
 **1. Démarrer le service Odoo en mode débug**
 
@@ -331,7 +340,7 @@ Exemple de fichier :
           "host": "localhost",
           "pathMappings": [
               {
-                  "localRoot": "${workspaceFolder}/odoo-14.0/",
+                  "localRoot": "${workspaceFolder}/odoo-11.0/",
                   "remoteRoot": "/opt/odoo/odoo",
               },
               {
@@ -347,6 +356,7 @@ Exemple de fichier :
 Le port `8879` ici est un port qui redirige vers le `8069` dans mon conteneur. Cela est définit dans le `docker-compose.yml`.
 
 Les valeurs dans `localRoot` et `remoteRoot` définies dans `pathMappings` sont les chemins vers le Odoo et surtout vers les addons dans le conteneur que vous souhaitez pouvoir debugger. Si jamais vous placez un point d'arrêt VSCode sur un fichier qui ne fait pas partie des chemins définis ici VScode grisera le point d'arrêt en vous disant qu'il n'est pas pris en compte.
+Pour plus de simplicité vous pouvez directement mapper tout le  répertoire `/opt/odoo`.
 
 Il vous suffira maintenant de placer un point d'arrêt dans le code en fonction des besoins et de lancer la configuration avant de réaliser l'action qui délanchera le point d'arrêt.
 
@@ -364,7 +374,7 @@ web:
   image: my-odoo-11.0:0.1
   [...]
   volumes:
-    - siclone-odoo-data:/opt/odoo/data
+    - myproject-odoo-data:/opt/odoo/data
     - ./config:/etc/odoo
     - ./custom_addons:/opt/odoo/custom_addons
     - ./odoo:/opt/odoo/odoo
@@ -389,9 +399,3 @@ Il faudra donc le préciser lors du lancement de la commande `docker-compose up`
 ```shell
 $ docker-compose -f docker-compose.yml -f docker-compose-odoo-local.yml up -d
 ```
-
-
-Todo :
-------
-
-* Mettre en place une image docker pour un remote debugger avec Pycharm ou autre

@@ -1,5 +1,8 @@
 FROM ubuntu:18.04
 
+# Generate locale C.UTF-8 for postgres and general locale data
+ENV LANG C.UTF-8
+
 # Install System dependencies
 RUN set -x; \
     apt-get update \

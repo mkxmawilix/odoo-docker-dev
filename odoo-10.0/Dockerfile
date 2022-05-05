@@ -12,22 +12,27 @@ RUN set -x; \
     ./wkhtmltox.deb \
     postgresql-client \
     build-essential \
-    python3 \
-    python3-setuptools \
-    python3-pip \
-    python3-dev \
-    libxml2-dev \
-    libxslt1-dev \
-    libldap2-dev \
-    libssl-dev \
-    libsasl2-dev \
+    python-minimal \
+    python-setuptools \
+    python-pip \
+    python-dev \
+    python-ldap \
     nano \
     git \
     openssh-client \
-    && apt purge -y libssl-dev \
-    && apt install -y -f libssl1.0-dev \
-    && apt install -y --no-install-recommends node-less \
+    libsasl2-dev \
+    python-dev \
+    libldap2-dev \
+    libssl-dev \
+    libpq-dev \
+    libxslt1-dev \
+    zlib1g-dev \
+    python-ldap \
+    ghostscript \
+    graphviz \
+    && apt-get install -y --no-install-recommends \
     nodejs-dev \
+    nodejs \
     node-gyp \
     npm \
     && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
@@ -41,13 +46,13 @@ WORKDIR /opt/odoo
 
 # Install Odoo and dependencies from latest source
 USER odoo
-RUN git clone --branch=11.0 --depth=1 https://github.com/odoo/odoo.git odoo
+RUN git clone --branch=10.0 --depth=1 https://github.com/odoo/odoo.git odoo
 
 USER root
-RUN pip3 install --no-cache-dir -r odoo/requirements.txt
+RUN pip install --no-cache-dir -r odoo/requirements.txt
 
-# Install debugpy
-RUN pip3 install -U debugpy
+# Debugpy
+RUN pip install debugpy
 
 # Define runtime configuration
 COPY src/entrypoint.sh /opt/odoo
